@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Carol's</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <script src="https://kit.fontawesome.com/93f4845146.js"></script>
+  <link rel="stylesheet" href="css/menu.css">
+</head>
+<body onload="init();">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#lista-postagens">Carol's</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a data-toggle="modal" data-target="#myModal">Nova postagem</a></li>
+      </ul>
+    </div>
+  </nav>
+    
+  <div class="container" id="lista-postagens" style="margin-top:100px">
+
+  </div>
+   <!-- Modal -->
+   <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Adicionar postagem</h4>
+        </div>
+        <div class="modal-body">
+          <form id="form-postagem">
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <label for="inputId">Id</label>
+                    <input type="text" class="form-control" id="inputId" placeholder="ID" disabled>
+                </div>
+                <div class="col-sm-8">
+                    <label for="inputTitulo">Título (*)</label>
+                    <input type="text" class="form-control" id="inputTitulo" required placeholder="Informe o título da postagem">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <label for="inputTexto">Texto (*)</label>
+                    <textarea cols="100" rows="10" type="text" class="form-control" id="inputTexto" required placeholder="Insira o texto da postagem"></textarea>
+                </div>
+                <div class="col-sm-7">
+                    <label for="inputImagem">Imagem (*)</label>
+                    <input type="file" class="form-control" id="inputImg" required placeholder="Selecione a imagem da postagem">
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-4">
+                    <small>(*) Campos obrigatórios</small>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <input type="button" class="btn btn-success" id="btnInsert" value="Inserir">
+                    <input type="button" class="btn btn-secondary" id="btnClear" value="Limpar Form">
+                </div>
+            </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <footer align="center">
+    <img src="img/logo.png" alt="Carol's" height="80px">
+    <small>Copyright © 2019 </small>
+  </footer> 
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="js/fakedb.js"></script>
+<script>
+  function like (id, curtida) {
+    if (curtida == false)
+    {
+      updateCurtida(id, 1, true, "blue");
+      color="blue";
+    }
+    else
+    {
+      updateCurtida(id, -1, false, "black");
+      color="black";
+    }
+
+    exibePostagens();
+}
+
+function exibePostagens() {
+    // Remove todas as linhas do corpo do body
+    $("#lista-postagens").html("");
+
+    // Popula o body com os registros do banco de dados
+    for (i = db.data.length-1; i >= 0 ; i--) {
+        let postagem = db.data[i];
+        $("#lista-postagens").append(`
+        <div class="panel panel-default"> 
+          <div class="panel-heading">   
+        <h3><i class="fas fa-trash" id="lixeira" onclick="deletePost(${postagem.id})"></i>${postagem.titulo}</h3> </div>
+        <div class="panel-body"> <p>Data: ${postagem.data}</p><p>${postagem.texto}</p>
+        <img src="img/logo.png" alt="Carol's" height="200px"></div>
+        <div class="panel-footer"><p><i class="fas fa-thumbs-up" onclick="like(${postagem.id}, ${postagem.curtido})" id="id${i+1}" style="color: ${postagem.likeColor};"></i>  ${postagem.curtidas}</p></div>
+      </div>
+        <h3>Comentários</h3><br>`);
+        for (j = 0; j < db.data[i].comentarios.length; j++)
+        {
+          let comentario = db.data[i].comentarios[j];
+          $("#lista-postagens").append (`
+            <div class="panel panel-default">
+              <div class="panel-heading"><h4><strong>${comentario.nome}</strong></h4></div>
+              <div class="panel-body"><p>${comentario.texto}</p></div>`);
+        }
+        $("#lista-postagens").append(`<div class="panel panel-default">
+                <form id=form-comentarios">
+                  <div class="panel-heading">
+                      <div class="form-group">
+                        <label for="inputNome">Nome (*)</label>
+                        <input type="text" class="form-control" id="inputNome${postagem.id}" placeholder="Nome">
+                      </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="form-group">
+                      <label for="inputComentario">Comentário (*)</label>
+                      <textarea cols="100" rows="10" type="text" class="form-control" id="inputComentario${postagem.id}" required placeholder="Insira o seu comentário"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <input type="button" class="btn btn-success" id="btnAdicionarComentario" value="Inserir Comentário" onclick="insereComentario(${postagem.id})">
+                    </div>
+                  </div>
+                </form>
+              </div><br><br>`);
+    }
+  }
+function deletePost (id)
+{
+  deletePostagem(id);
+  exibePostagens();
+}
+function insereComentario (id) {
+  let campoNome = $("#inputNome"+id).val();
+  let campoComentario = $("#inputComentario"+id).val();
+  let comentario = {nome: campoNome, texto: campoComentario};
+
+  insertComentario(id, comentario);
+
+  exibePostagens();
+}
+  function init() {
+    $("#btnInsert").click(function () {
+      // Verfica se o formulário está preenchido corretamente
+      // if (!$('#form-postagem')[0].checkValidity()) {
+      //     displayMessage("Preencha o formulário corretamente.");
+      //     return;
+      // }
+      // Obtem os valores dos campos do formulário
+      let campoTitulo = $("#inputTitulo").val();
+      let campoTexto = $("#inputTexto").val();
+      let campoImagem = $('#inputImagem').val();
+      let postagem = { titulo: campoTitulo, texto: campoTexto, img: campoImagem};
+      
+      insertPostagem(postagem);
+
+      // Reexibe os contatos
+      exibePostagens();
+
+      // Limpa o formulario
+      $("#form-postagem")[0].reset();
+  });
+
+  $('#msg').bind("DOMSubtreeModified", function () {
+    window.setTimeout(function () {
+        $(".alert").fadeTo(500, 0).slideUp(500, function () {
+            $(this).remove();
+        });
+    }, 5000);
+});
+
+exibePostagens();
+  }
+</script>
+</html>
