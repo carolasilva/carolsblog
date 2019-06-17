@@ -20,6 +20,7 @@
       </div>
       <ul class="nav navbar-nav">
         <li class="active"><a data-toggle="modal" data-target="#myModal">Nova postagem</a></li>
+        <li><a href="https://github.com/carolasilva/carolsblog" target="_blank"><i class="fab fa-github"> </i> Github</a></li>
       </ul>
     </div>
   </nav>
@@ -40,11 +41,7 @@
         <div class="modal-body">
           <form id="form-postagem">
             <div class="form-group row">
-                <div class="col-sm-4">
-                    <label for="inputId">Id</label>
-                    <input type="text" class="form-control" id="inputId" placeholder="ID" disabled>
-                </div>
-                <div class="col-sm-8">
+                <div class="col-sm-12">
                     <label for="inputTitulo">Título (*)</label>
                     <input type="text" class="form-control" id="inputTitulo" required placeholder="Informe o título da postagem">
                 </div>
@@ -56,7 +53,7 @@
                 </div>
                 <div class="col-sm-7">
                     <label for="inputImagem">Imagem (*)</label>
-                    <input type="file" class="form-control" id="inputImg" required placeholder="Selecione a imagem da postagem">
+                    <input type="file" class="form-control" id="getimage" required placeholder="Selecione a imagem da postagem">
                 </div>
             </div>
             <div class="form-group row">
@@ -88,6 +85,17 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="js/fakedb.js"></script>
 <script>
+function imageHandler(e2) {
+  var store = $("#getimage").attr("name", e2.target.result);
+}
+
+function loadimage(e1) {
+  var filename = e1.target.files[0];
+  var fr = new FileReader();
+  fr.onload = imageHandler;
+  fr.readAsDataURL(filename);
+}
+
   function like (id, curtida) {
     if (curtida == false)
     {
@@ -115,7 +123,7 @@ function exibePostagens() {
           <div class="panel-heading">   
         <h3><i class="fas fa-trash" id="lixeira" onclick="deletePost(${postagem.id})"></i>${postagem.titulo}</h3> </div>
         <div class="panel-body"> <p>Data: ${postagem.data}</p><p>${postagem.texto}</p>
-        <img src="img/logo.png" alt="Carol's" height="200px"></div>
+        <img src="${postagem.img}" alt="Carol's" height="200px"></div>
         <div class="panel-footer"><p><i class="fas fa-thumbs-up" onclick="like(${postagem.id}, ${postagem.curtido})" id="id${i+1}" style="color: ${postagem.likeColor};"></i>  ${postagem.curtidas}</p></div>
       </div>
         <h3>Comentários</h3><br>`);
@@ -158,21 +166,31 @@ function insereComentario (id) {
   let campoComentario = $("#inputComentario"+id).val();
   let comentario = {nome: campoNome, texto: campoComentario};
 
+  if (!$('#form-comentarios')[0].checkValidity()) {
+          alert("Preencha o formulário corretamente.");
+          return;
+  }
+
   insertComentario(id, comentario);
 
   exibePostagens();
+
+  
 }
   function init() {
+    var y = document.getElementById("getimage");
+    y.addEventListener('change', loadimage, false);
+
     $("#btnInsert").click(function () {
       // Verfica se o formulário está preenchido corretamente
-      // if (!$('#form-postagem')[0].checkValidity()) {
-      //     displayMessage("Preencha o formulário corretamente.");
-      //     return;
-      // }
+      if (!$('#form-postagem')[0].checkValidity()) {
+          alert("Preencha o formulário corretamente.");
+          return;
+      }
       // Obtem os valores dos campos do formulário
       let campoTitulo = $("#inputTitulo").val();
       let campoTexto = $("#inputTexto").val();
-      let campoImagem = $('#inputImagem').val();
+      let campoImagem = $('#getimage').attr("name");
       let postagem = { titulo: campoTitulo, texto: campoTexto, img: campoImagem};
       
       insertPostagem(postagem);

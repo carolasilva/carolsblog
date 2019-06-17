@@ -10,7 +10,7 @@ var dbfake = {
             Palco da estreia na Copa América, o Morumbi não é o melhor ambiente para um técnico de seleção brasileira que está pressionado por resultados. Historicamente, a torcida paulista é exigente com a Seleção (relembre aqui). Tanto que Tite dividiu opiniões antes de a bola rolar.
             Quando o nome do treinador foi anunciado pelo sistema de som, logo depois da escalação titular e dos reservas, alguns torcedores vaiaram, e outros aplaudiram. Após a partida, Tite foi questionado sobre as vaias e como tem se sentido após mais uma estreia.
             - Meu perfil não é ser incisivo. Sou direto. Mas não sou de fazer cena. Eu sou muito direto naquilo que tem de ser colocado. Estou mais cascudo. Absorvi um pouco mais (depois do tropeço na Copa do Mundo). Estou mais cascudo agora - falou o treinador.`,
-            "img": "carol123",
+            "img": "/img/tite.jpg",
             "curtidas": "60",
             "curtido": false,
             "likeColor": "black",
@@ -40,7 +40,7 @@ var dbfake = {
             "texto": `Cidades brasileiras registraram protestos e paralisações em serviços públicos nesta sexta-feira (14) contra a reforma da Previdência e os cortes na educação. Os 26 estados e o Distrito Federal foram afetados.
             O principal efeito da greve foi no transporte coletivo. Ao longo da manhã, os efeitos da paralisação foram sentidos com a interrupção total ou parcial de linhas. Das 27 capitais, 19 tiveram o sistema de ônibus afetado pela mobilização. Considerando outros modais, como trem e metrô, esse número chegou a 21.
             Outras oito capitais não tiveram interrupção no transporte coletivo por ônibus, mas sofreram com bloqueios de ruas ou estradas por manifestantes ou tiveram paralisação parcial no metrô — caso de São Paulo e Belo Horizonte, por exemplo (veja detalhes por estado mais abaixo).`,
-            "img": "carol123",
+            "img": "/img/manifestacao.jpeg",
             "curtidas": "1",
             "curtido": false,
             "likeColor": "black",
@@ -70,7 +70,7 @@ var dbfake = {
             "texto": `A Polícia Militar de Campinas (SP) prendeu na noite desta sexta-feira (14) duas mulheres e um homem suspeitos de roubar um salão de beleza de luxo, no bairro Nova Campinas. De acordo com a corporação, o trio fez um arrastão no local no momento em que ocorria uma exposição de joias. Os policiais conseguiram recuperar as peças, avaliadas em R$ 688 mil.
             Um funcionário do salão contou à EPTV, afiliada TV Globo, que as duas mulheres que participaram do assalto visitaram o estabelecimento mais cedo para marcar um horário, como se fossem clientes, olhando, inclusive, mostruários de joias.
             Segundo a testemunha, uma delas voltou ao local no final da tarde, acompanhada de um homem, e eles anunciaram o assalto. Além das joias, os criminosos fizeram um "arrastão" e roubaram celulares de clientes e materiais do salão.`,
-            "img": "carol123",
+            "img": "/img/prisao.jpg",
             "curtidas": "6",
             "curtido": false,
             "likeColor": "black",
@@ -91,7 +91,7 @@ var dbfake = {
             "titulo": "Como fazer o seu dia mais produtivo",
             "texto": `O alarme toca. Você automaticamente pressiona a “soneca”. O alarme toca mais umas duas vezes, sua mãe vem te chamar, até você finalmente acordar e ver que está atrasado para a aula. Você levanta correndo enquanto checa o WhatsApp. Lava o rosto, escova os dentes e faz maratona para vestir as roupas. Engole o café da manhã ainda meio atordoado, enquanto dá uma espiada no Facebook. Sai correndo porta afora para não perder o ônibus. Na aula, se distrai com tudo e fica morrendo de sono… Um saco, né?
             Essa rotina é normal para muita gente que acorda cedo. Quando eu estava no colégio, fazia exatamente a mesma coisa: dormia até o último minuto, depois saía correndo para a aula sem nem saber que dia era. Mas, depois de alguns anos, comecei a perceber a importância de acordar bem, isto é, reservar algum tempo pela manhã para dar ao seu corpo a chance de despertar completamente e ficar disposto para enfrentar o resto do dia. Sei que é quase impossível pensar em perder quaisquer minutos de sono, mas pode acreditar: mudar alguns hábitos na sua manhã pode melhorar o seu dia em 1000%, aumentando até mesmo a sua concentração e capacidade de estudar.`,
-            "img": "carol123",
+            "img": "/img/produtividade.jpg",
             "curtidas": "15",
             "curtido": false,
             "likeColor": "black",
@@ -122,7 +122,7 @@ var dbfake = {
             É comum que editais para bolsas de estudo e candidaturas comuns, para graduação ou pós-graduação, mencionem esse critério na descrição do processo seletivo. Mais do que significar simplesmente “boas notas” na formação anterior, um bom desempenho acadêmico se traduz em vários aspectos da application.
             Para começo de conversa, é necessário entender de que forma as notas são avaliadas pelas instituições de ensino. O histórico escolar é enviado à universidade, geralmente acompanhado de uma tradução para língua estrangeira, listando quais matérias um estudante cursou e quais as notas obtidas. 
             Nesse momento, as universidades consideram não só as notas separadamente, como também uma média – o que, nas instituições americanas, é chamado de GPA. O resultado pode ser calculado com base em todas as matérias, ou com base em disciplinas tidas como essenciais.`,
-            "img": "carol123",
+            "img": "/img/nota100.jpg",
             "curtidas": "23",
             "curtido": false,
             "likeColor": "black",
@@ -150,8 +150,13 @@ function displayMessage(msg) {
 
 function insertPostagem(postagem) 
 {
+    let novoId;
+
     // Calcula novo Id a partir do último código existente no array
-    let novoId = db.data[db.data.length - 1].id + 1;
+    if (db.data.length == 0)
+        novoId = 0;
+    else 
+        novoId = db.data[db.data.length - 1].id + 1;
     let data = new Date();
     // Guarda cada pedaço em uma variável
     let dia     = data.getDate();           // 1-31
@@ -170,7 +175,7 @@ function insertPostagem(postagem)
         "data": data_completa,
         "titulo": postagem.titulo,
         "texto": postagem.texto,
-        "imagens": postagem.img,
+        "img": postagem.img,
         "curtidas": "0",
         "curtido": false,
         "likeColor": "black",
