@@ -166,9 +166,10 @@ function insereComentario (id) {
   let campoComentario = $("#inputComentario"+id).val();
   let comentario = {nome: campoNome, texto: campoComentario};
 
-  if (!$('#form-comentarios')[0].checkValidity()) {
-          alert("Preencha o formulário corretamente.");
-          return;
+  if(campoNome == "" || campoComentario == "")
+  {
+    alert("Preencha o formulário corretamente.");
+    return;
   }
 
   insertComentario(id, comentario);
